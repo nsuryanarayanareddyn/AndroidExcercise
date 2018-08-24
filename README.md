@@ -1,6 +1,6 @@
 # AndroidExcercise
 
-Steps for running the app.
+#Steps for running the app.
 
 Step1 : Clone or download the  code form provided link.
 
@@ -33,6 +33,8 @@ Step5 : Hit run button.
 9.Handled device rotation
 
 10.I have used Card view for better UI/UX experience.
+
+Note : If any additional requirements, please let me know I can implement and provide it.
 
 
 
