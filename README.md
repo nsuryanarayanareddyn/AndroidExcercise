@@ -1,5 +1,5 @@
 # AndroidExcercise
-1.In this application I have followed MVP  pattern.
+#In this application I have followed MVP  pattern.
 2.I have used Retrofit to fetch the data from remote server
 3.I have used picasso for image displaying
 4.I have used RecyclerView instead of traditional Listview since RecyclerView will  give better performace.
