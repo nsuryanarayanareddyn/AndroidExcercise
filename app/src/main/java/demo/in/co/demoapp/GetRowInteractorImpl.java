@@ -12,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GetRowInteractorImpl implements MainContract.GetRowIntractor {
+public class GetRowInteractorImpl implements ArticleContract.GetRowIntractor {
 
     @Override
     public void getRowArrayList(final OnFinishedListener onFinishedListener) {
@@ -20,7 +20,7 @@ public class GetRowInteractorImpl implements MainContract.GetRowIntractor {
         /** Create handle for the RetrofitInstance interface*/
         ArticleInterface service = RetrofitInstance.getRetrofitInstance().create(ArticleInterface.class);
 
-        /** Call the method with parameter in the interface to get the notice data*/
+        /** Call the method with parameter in the interface to get the Rows data*/
         Call<ResponseData> call = service.getArticles();
 
         /**Log the URL called*/
@@ -29,9 +29,9 @@ public class GetRowInteractorImpl implements MainContract.GetRowIntractor {
         call.enqueue(new Callback<ResponseData>() {
             @Override
             public void onResponse(Call<ResponseData> call, Response<ResponseData> response) {
-                Response<ResponseData> mResponse = (Response<ResponseData>)response;
+                Response<ResponseData> mResponse = (Response<ResponseData>) response;
                 List<Row> mRowList = mResponse.body().getRows();
-                onFinishedListener.onFinished(mRowList,mResponse.body().getTitle());
+                onFinishedListener.onFinished(mRowList, mResponse.body().getTitle());
 
             }
 

@@ -1,14 +1,13 @@
 package demo.in.co.demoapp;
 
 import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -17,19 +16,19 @@ import android.widget.Toast;
 import java.util.List;
 
 import Adapters.ArticleAdapter;
-import Models.ResponseData;
 import Models.Row;
+import Uitility.Helper;
 
 
-public class MainActivity extends AppCompatActivity implements MainContract.MainView {
+public class MainActivity extends AppCompatActivity implements ArticleContract.MainView {
 
     private ArticleAdapter mArticleAdapter;
 
 
     private ProgressBar progressBar;
     private RecyclerView mRecyclerView;
-
-    private MainContract.presenter presenter;
+    private ArticleContract.presenter presenter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,17 +36,44 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         setContentView(R.layout.activity_main);
         initializeToolbarAndRecyclerView();
         initProgressBar();
+        presenter = new ArticlePresenterImpl(this, new GetRowInteractorImpl());
+        if (Helper.hasNetworkConnection(MainActivity.this)) {
+            presenter.requestDataFromServer();
+        } else {
+            this.showToast(MainActivity.this, "Please check your netwrok connection and try again.");
+        }
 
-        presenter = new MainPresenterImpl(this, new GetRowInteractorImpl());
-        presenter.requestDataFromServer();
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // cancel the Visual indication of a refresh
+
+
+                if (Helper.hasNetworkConnection(MainActivity.this)) {
+
+                    presenter.requestDataFromServer();
+
+                } else {
+                    showToast(MainActivity.this, "Please check your netwrok connection and try again.");
+                }
+
+            }
+        });
+
     }
 
 
     @Override
-    public void setDataToRecyclerView(List<Row> mRowList,String title) {
+    public void setDataToRecyclerView(List<Row> mRowList, String title) {
         getSupportActionBar().setTitle(title);
-        mArticleAdapter = new ArticleAdapter(MainActivity.this, mRowList, recyclerItemClickListener);
-        mRecyclerView.setAdapter(mArticleAdapter);
+        swipeRefreshLayout.setRefreshing(false);
+        if (mRowList.size() > 0) {
+            mArticleAdapter = new ArticleAdapter(MainActivity.this, mRowList, recyclerItemClickListener);
+            mRecyclerView.setAdapter(mArticleAdapter);
+        } else {
+            showToast(MainActivity.this, "No  data found. Please try again");
+        }
+
     }
 
     @Override
@@ -74,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.SwipeRefreshLayoutLayout);
         mRecyclerView = findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         mRecyclerView.setLayoutManager(layoutManager);
@@ -110,30 +136,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
         public void onItemClick(Row mRow) {
 
             Toast.makeText(MainActivity.this,
-                    "List title:  " + mRow.getTitle(),
+                    "You clicked on : " + mRow.getTitle(),
                     Toast.LENGTH_LONG).show();
 
         }
     };
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_refresh) {
-            presenter.onRefreshButtonClick();
-        }
-
-        return super.onOptionsItemSelected(item);
+    private void showToast(Context mContext, String message) {
+        Toast.makeText(mContext, message, Toast.LENGTH_LONG).show();
     }
 }

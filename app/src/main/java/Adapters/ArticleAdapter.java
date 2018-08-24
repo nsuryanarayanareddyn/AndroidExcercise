@@ -64,25 +64,25 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
         Row mResult = mArticleList.get(position);
 
-        if(mResult.getTitle() != null && mResult.getTitle()!= ""){
+        if (mResult.getTitle() != null && mResult.getTitle() != "") {
             holder.mArticletitle.setText(mResult.getTitle());
-        }else{
+        } else {
             holder.mArticletitle.setText("No title");
         }
 
-        if(mResult.getDescription() != null && mResult.getDescription() != ""){
+        if (mResult.getDescription() != null && mResult.getDescription() != "") {
             holder.mArticledeslable.setText(mResult.getDescription());
-        }else{
+        } else {
             holder.mArticledeslable.setText("No descrption");
         }
 
-       if(mResult.getImageHref() != null && mResult.getImageHref() != ""){
-           Picasso.with(mContext).load(mResult.getImageHref()).fit().placeholder(R.drawable.image_preview)
-                   .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                   .error(R.drawable.image_preview).into(holder.mArticleThumbnail);
-       }else{
+        if (mResult.getImageHref() != null && mResult.getImageHref() != "") {
+            Picasso.with(mContext).load(mResult.getImageHref()).fit().placeholder(R.drawable.image_preview)
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .error(R.drawable.image_preview).into(holder.mArticleThumbnail);
+        } else {
             holder.mArticleThumbnail.setImageResource(R.drawable.image_preview);
-       }
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +90,6 @@ public class ArticleAdapter extends RecyclerView.Adapter<ArticleAdapter.MyViewHo
                 recyclerItemClickListener.onItemClick(mArticleList.get(position));
             }
         });
-
 
 
     }

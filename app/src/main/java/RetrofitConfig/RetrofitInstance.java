@@ -23,9 +23,10 @@ public class RetrofitInstance {
     protected static Gson gson = new GsonBuilder()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
             .create();
+
     /**
      * Create an instance of Retrofit object
-     * */
+     */
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {
             retrofit = new retrofit2.Retrofit.Builder()
