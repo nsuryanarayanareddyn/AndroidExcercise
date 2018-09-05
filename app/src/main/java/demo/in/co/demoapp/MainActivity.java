@@ -68,6 +68,12 @@ public class MainActivity extends AppCompatActivity implements ArticleContract.M
         getSupportActionBar().setTitle(title);
         swipeRefreshLayout.setRefreshing(false);
         if (mRowList.size() > 0) {
+            for (int i=0;i<mRowList.size();i++){
+                Row mrow = mRowList.get(i);
+                if(mrow.getTitle() == null ||mrow.getDescription() == null || mrow.getImageHref()==null){
+                    mRowList.remove(i);
+                }
+            }
             mArticleAdapter = new ArticleAdapter(MainActivity.this, mRowList, recyclerItemClickListener);
             mRecyclerView.setAdapter(mArticleAdapter);
         } else {

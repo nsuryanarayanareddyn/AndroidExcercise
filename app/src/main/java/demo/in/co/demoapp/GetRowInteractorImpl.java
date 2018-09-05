@@ -31,6 +31,7 @@ public class GetRowInteractorImpl implements ArticleContract.GetRowIntractor {
             public void onResponse(Call<ResponseData> call, Response<ResponseData> response) {
                 Response<ResponseData> mResponse = (Response<ResponseData>) response;
                 List<Row> mRowList = mResponse.body().getRows();
+
                 onFinishedListener.onFinished(mRowList, mResponse.body().getTitle());
 
             }
@@ -38,6 +39,7 @@ public class GetRowInteractorImpl implements ArticleContract.GetRowIntractor {
             @Override
             public void onFailure(Call<ResponseData> call, Throwable t) {
                 onFinishedListener.onFailure(t);
+                int x = 0;
             }
         });
 
